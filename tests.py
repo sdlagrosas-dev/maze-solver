@@ -25,25 +25,38 @@ class Tests(unittest.TestCase):
     #     m1 = Maze(100, 100, num_rows, num_cols, 20, 20, win)
     #     m1.break_entrance_and_exit()
 
-    def test_maze_break_walls_r(self):
-        win = Window(800, 600)
-        num_cols = 5
-        num_rows = 5
-        m1 = Maze(100, 100, num_rows, num_cols, 30, 30, win)
-        m1.break_entrance_and_exit()
-        m1._break_walls_r(num_cols//2, num_rows//2)
-        m1._reset_cells_visited()
+    # def test_maze_break_walls_r(self):
+    #     win = Window(800, 600)
+    #     num_cols = 5
+    #     num_rows = 5
+    #     m1 = Maze(100, 100, num_rows, num_cols, 30, 30, win)
+    #     m1.break_entrance_and_exit()
+    #     m1._break_walls_r(num_cols//2, num_rows//2)
+    #     m1._reset_cells_visited()
 
-    def test_maze_solve_r(self):
+    def test_maze_solve_dfs(self):
         win = Window(800, 600)
         num_cols = 10
         num_rows = 10
-        m1 = Maze(100, 100, num_rows, num_cols, 40, 40, win)
+        m1 = Maze(100, 100, num_rows, num_cols, 40, 40, win, seed=42)
         m1.break_entrance_and_exit()
-        m1._break_walls_r(0, 0)
+        m1._break_walls_r(num_rows//2, num_cols//2)
         m1._reset_cells_visited()
-        m1.solve()
+        game_win = m1.solve()
+        if game_win:
+            print("You Win!")
 
+    def test_maze_solve_bfs(self):
+        win = Window(800, 600)
+        num_cols = 10
+        num_rows = 10
+        m1 = Maze(100, 100, num_rows, num_cols, 40, 40, win, seed=42)
+        m1.break_entrance_and_exit()
+        m1._break_walls_r(num_rows//2, num_cols//2)
+        m1._reset_cells_visited()
+        game_win = m1.solve(alg='bfs')
+        if game_win:
+            print("You Win!")
 
 
 if __name__ == "__main__":

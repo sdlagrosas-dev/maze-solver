@@ -122,48 +122,69 @@ class Maze:
             for c in range(self.num_cols):
                 self._cells[r][c].visited = False
 
-    def solve(self):
-        return self._solve_r(0, 0)
+    def solve(self, alg='dfs'):
 
-    def _solve_r(self, i, j) -> bool: 
+        if alg == 'dfs':
+            return self._dfs(0, 0)
+        if alg == 'bfs':
+            return self._bfs(0, 0)
+        if alg == 'a_star':
+            pass
+
+        raise NotImplementedError(f"Unknown algorithm: {alg}")
+
+
+    def _dfs(self, i, j) -> bool: 
         self._animate()
-        print(f"Cell: {i},{j}")
         self._cells[i][j].visited = True
 
         if i == self.num_rows-1 and j == self.num_cols-1:
             return True
         
-        if i < self.num_rows - 1 and not self._cells[i + 1][j].visited and not self._cells[i][j]._has_bottom_wall:
-            self._cells[i][j].draw_move(self._cells[i + 1][j])
-            move_down_result = self._solve_r(i + 1, j)
-            if move_down_result:
-                return move_down_result
-            else:
-                self._cells[i][j].draw_move(self._cells[i + 1][j], undo=True)
-        if j < self.num_cols - 1 and not self._cells[i][j + 1].visited and not self._cells[i][j]._has_right_wall:
-            self._cells[i][j].draw_move(self._cells[i][j + 1])
-            move_right_result = self._solve_r(i, j + 1)
-            if move_right_result:
-                return move_right_result
-            else:
-                self._cells[i][j].draw_move(self._cells[i][j + 1], undo=True)
-        if i > 0 and not self._cells[i - 1][j].visited and not self._cells[i][j]._has_top_wall:
-            self._cells[i][j].draw_move(self._cells[i - 1][j])
-            move_up_result = self._solve_r(i - 1, j)
-            if move_up_result:
-                return move_up_result
-            else:
-                self._cells[i][j].draw_move(self._cells[i - 1][j], undo=True)
-        if j > 0 and not self._cells[i][j - 1].visited and not self._cells[i][j]._has_left_wall:
-            self._cells[i][j].draw_move(self._cells[i][j - 1])
-            move_left_result = self._solve_r(i, j - 1)
-            if move_left_result:
-                return move_left_result
-            else:
-                self._cells[i][j].draw_move(self._cells[i][j - 1], undo=True)
+        neighbors = [
+            (1, 0, not self._cells[i][j]._has_bottom_wall),  # Down
+            (0, 1, not self._cells[i][j]._has_right_wall),   # Right
+            (-1, 0, not self._cells[i][j]._has_top_wall),    # Up
+            (0, -1, not self._cells[i][j]._has_left_wall)    # Left
+        ]
+
+        for di, dj, is_open in neighbors:
+            ni, nj = i + di, j + dj
+            if 0 <= ni < self.num_rows and 0 <= nj < self.num_cols and not self._cells[ni][nj].visited and is_open:
+                self._cells[i][j].draw_move(self._cells[ni][nj])
+                if self._dfs(ni, nj):
+                    return True
+                self._cells[i][j].draw_move(self._cells[ni][nj], undo=True)
         
         return False
 
+    def _bfs(self, start_i, start_j):
+        self._animate()
+        self._cells[start_i][start_j].visited = True
 
+        queue = [(start_i, start_j)]
+
+        while queue:
+            self._animate()
+            current_i, current_j = queue.pop(0)
+
+            if current_i == self.num_rows - 1 and current_j == self.num_cols - 1:
+                return True
+
+            neighbors = [
+                (current_i + 1, current_j, not self._cells[current_i][current_j]._has_bottom_wall),
+                (current_i, current_j + 1, not self._cells[current_i][current_j]._has_right_wall),
+                (current_i - 1, current_j, not self._cells[current_i][current_j]._has_top_wall),
+                (current_i, current_j - 1, not self._cells[current_i][current_j]._has_left_wall)
+            ]
+
+            for ni, nj, is_open in neighbors:
+                if 0 <= ni < self.num_rows and 0 <= nj < self.num_cols:
+                    if not self._cells[ni][nj].visited and is_open:
+                        self._cells[current_i][current_j].draw_move(self._cells[ni][nj])
+                        self._cells[ni][nj].visited = True
+                        queue.append((ni, nj))
+
+        return False
 
 
