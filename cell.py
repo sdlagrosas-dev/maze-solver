@@ -25,30 +25,18 @@ class Cell:
         self._has_right_wall = has_right_wall
         self._has_top_wall = has_top_wall
         self._has_bottom_wall = has_bottom_wall
+        self.visited = False
 
     def draw(self):
-        if self._has_left_wall:
+        for start, end, color in (
+            (Point(self._x1, self._y1), Point(self._x1, self._y2), "black" if self._has_left_wall else "white"),
+            (Point(self._x2, self._y1), Point(self._x2, self._y2), "black" if self._has_right_wall else "white"),
+            (Point(self._x1, self._y1), Point(self._x2, self._y1), "black" if self._has_top_wall else "white"),
+            (Point(self._x1, self._y2), Point(self._x2, self._y2), "black" if self._has_bottom_wall else "white"),
+        ):
             self._win.draw_line(
-                Line(Point(self._x1, self._y1), Point(self._x1, self._y2)),
-                "black",
-            )
-
-        if self._has_right_wall:
-            self._win.draw_line(
-                Line(Point(self._x2, self._y1), Point(self._x2, self._y2)),
-                "black",
-            )
-
-        if self._has_top_wall:
-            self._win.draw_line(
-                Line(Point(self._x1, self._y1), Point(self._x2, self._y1)),
-                "black",
-            )
-
-        if self._has_bottom_wall:
-            self._win.draw_line(
-                Line(Point(self._x1, self._y2), Point(self._x2, self._y2)),
-                "black",
+                Line(start, end),
+                color,
             )
 
     def draw_move(self, to_cell, undo=False):
@@ -60,10 +48,12 @@ class Cell:
             self._win.draw_line(
                 Line(center_point, to_center_point),
                 "red",
+                width=10
             )
 
         else:
             self._win.draw_line(
                 Line(center_point, to_center_point),
                 "gray",
+                width=10
             )

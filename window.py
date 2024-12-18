@@ -17,8 +17,8 @@ class Window:
         self.__root.update_idletasks()
         self.__root.update()
 
-    def draw_line(self, line: Line, fill_color):
-        line.draw(self.canvas, fill_color)
+    def draw_line(self, line: Line, fill_color, width=1):
+        line.draw(self.canvas, fill_color, width)
 
     def wait_for_close(self):
         self.is_running = True
