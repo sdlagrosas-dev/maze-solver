@@ -8,32 +8,16 @@ from maze import Maze
 def main():
     win = Window(800, 600)
 
-    # Test draw_line
-    # line_1 = Line(Point(0, 0), Point(100, 100))
-    # line_2 = Line(Point(0, 100), Point(100, 0))
-    # win.draw_line(line_1, "red")
-    # win.draw_line(line_2, "black")
+    # Test maze solve
+    num_cols = 12
+    num_rows = 10
+    m1 = Maze(50, 50, num_rows, num_cols, 50, 50, win)
+    m1.break_entrance_and_exit()
+    m1._break_walls_r(num_cols//2, num_cols//2)
+    m1._reset_cells_visited()
 
-    # Test draw cells
-    # cell_1 = Cell(1, 1, 100, 100, win)
-    # cell_1.draw()
-
-    # cell_2 = Cell(100, 1, 200, 100, win)
-    # cell_2.draw()
-
-    # cell_3 = Cell(200, 1, 300, 100, win)
-    # cell_3.draw()
-
-    # cell_4 = Cell(300, 1, 400, 100, win)
-    # cell_4.draw()
-
-    # # Test draw move
-    # cell_1.draw_move(cell_2, True)
-    # cell_2.draw_move(cell_3)
-    # cell_3.draw_move(cell_4, True)
-
-    # Test maze
-    maze = Maze(1, 1, 6, 8, 100, 100, win)
+    result = m1.solve()
+    print(result)
 
     # Close window
     win.wait_for_close()
