@@ -13,18 +13,15 @@ This project is based on a tutorial on [boot.dev](https://boot.dev).
 
 - Depth-First Search (DFS)
 - Breadth-First Search (BFS)
-- Dijkstra's Algorithm
-- A* Algorithm
+- A* Algorithm (not implemented)
 
 ## Visualizing the results
 
 - The results are visualized using Tkinter
 - The path is shown in red
-- The start is shown in green
-- The end is shown in blue
+- The backtracking path is shown in gray
 
 ## How to use
 
 - Clone the repository
-- Install the required packages with `pip install -r requirements.txt`
 - Run the program with `python main.py`
